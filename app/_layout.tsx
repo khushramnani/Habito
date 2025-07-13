@@ -1,41 +1,46 @@
 import { Stack, useRouter, useSegments } from "expo-router";
 import { useEffect } from "react";
+import { HabitProvider } from "../contexts/habitContext";
 import "../global.css";
 import AuthProvider, { useAuth } from "./context/authContext";
 
 function RouteGuard({children}: {children: React.ReactNode}) {
-  const { user , isAuthenticated } = useAuth();
-  const Segments = useSegments();
-  const isAuthGroup = Segments[0] === "auth";
+  const { user, isAuthenticated } = useAuth();
+  const segments = useSegments();
   const router = useRouter();
   
+  const isAuthGroup = segments[0] === "auth";
+  
   useEffect(() => {
-    setTimeout(() => {
-      if (!user && !isAuthGroup && !isAuthenticated) {
+    const timer = setTimeout(() => {
+      // Only redirect if we have determined the auth state
+      if (!isAuthenticated && !isAuthGroup && user === null) {
+        // User is not authenticated and not on auth page, redirect to auth
         router.replace("/auth");
-    } else if (user && isAuthGroup && isAuthenticated) {
+      } else if (isAuthenticated && isAuthGroup && user) {
+        // User is authenticated but on auth page, redirect to main app
         router.replace("/");
       }
-    }, 0);
-
-  }, [user]);
+    }, 200);
+    
+    return () => clearTimeout(timer);
+  }, [user, isAuthenticated, isAuthGroup]);
 
   return <>{children}</>;
-
 }
 
 
 export default function RootLayout() {
   return (
-    <>
     <AuthProvider>
-    <RouteGuard>
-    <Stack>
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      <Stack.Screen name="auth" options={{ headerShown: false }} />
-</Stack>
-</RouteGuard>
-</AuthProvider>
-    </>
+      <HabitProvider>
+        <RouteGuard>
+          <Stack>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="auth" options={{ headerShown: false }} />
+          </Stack>
+        </RouteGuard>
+      </HabitProvider>
+    </AuthProvider>
   );
 }

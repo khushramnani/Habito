@@ -1,0 +1,58 @@
+[
+    {
+        "id": "health",
+        "name": "Health & Fitness",
+        "icon": "heartbeat",
+        "color": "#FFB3A3"
+    },
+    {
+        "id": "productivity",
+        "name": "Productivity",
+        "icon": "rocket",
+        "color": "#A5D6A7"
+    },
+    {
+        "id": "learning",
+        "name": "Learning",
+        "icon": "book",
+        "color": "#90CAF9"
+    },
+    {
+        "id": "mindfulness",
+        "name": "Mindfulness",
+        "icon": "leaf",
+        "color": "#D1C4E9"
+    },
+
+    {
+        "id": "creative",
+        "name": "Creative",
+        "icon": "paint-brush",
+        "color": "#FFCC80"
+    },
+    {
+        "id": "social",
+        "name": "Social",
+        "icon": "users",
+        "color": "#F8BBD9"
+    },
+    {
+        "id": "financial",
+        "name": "Financial",
+        "icon": "money-bill-wave",
+        "color": "#FFF59D"
+    },
+    {
+        "id": "self-care",
+        "name": "Self-Care",
+        "icon": "spa",
+        "color": "#B39DDB"
+    },
+    {
+        "id":"other",
+        "name": "Other",
+        "icon": "ellipsis-h",
+        "color": "#BCAAA4"
+    }
+
+]
