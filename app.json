@@ -1,17 +1,23 @@
 {
   "expo": {
-    "name": "my-app",
-    "slug": "my-app",
+    "name": "Habiyo",
+    "slug": "habiyo",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
+    "scheme": "appwrite-callback-686d371300181ce0c5d2",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
     "ios": {
       "supportsTablet": true
     },
     "android": {
+      "package": "com.khushramnani.habiyo",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -33,10 +39,19 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
-      ]
+      ],
+      "expo-web-browser"
+      
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "fdb9a793-974a-4ad9-b11d-8bb0c89f7931"
+      },
+      "appwriteRedirect": "https://auth.expo.dev/khush_ramnani/habiyo"
     }
   }
 }

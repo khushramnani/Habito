@@ -1,4 +1,5 @@
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import { Query } from 'react-native-appwrite';
 import { useAuth } from '../app/context/authContext';
 import { database } from '../lib/appwrite';
 
@@ -37,6 +38,7 @@ interface HabitContextType {
     deleteHabit: (habitId: string) => Promise<void>;
     onRefresh: () => Promise<void>;
     getTodayStats: () => { completed: number; total: number };
+    fetchStreaks: () => Promise<any>;
 }
 
 const HabitContext = createContext<HabitContextType | undefined>(undefined);
@@ -64,7 +66,7 @@ export function HabitProvider({ children }: HabitProviderProps) {
         try {
             setLoading(true);
             const response = await database.listDocuments(DB_ID!, COLLECTION_ID!, [
-                // Add query to filter by userId if needed
+                Query.equal("userId", user?.$id!)
             ]);
             setHabits(response.documents as unknown as Habit[]);
         } catch (error) {
@@ -75,29 +77,154 @@ export function HabitProvider({ children }: HabitProviderProps) {
         }
     };
 
-    const markHabitComplete = async (habitId: string) => {
+    const fetchStreaks = async () => {
+        if (!user) return;
         try {
-            const habit = habits.find(h => h.$id === habitId);
-            
-            if (!habit) return;
+            const response = await database.listDocuments(
+                DB_ID!,
+                process.env.EXPO_PUBLIC_USER_STREAK_COLLECTION_ID!,
+                [Query.equal("userId", user.$id)]
+            );
+            const streakDoc = response.documents[0];
+            if (!streakDoc) {
+                return {
+                    currentStreak: 0,
+                    longestStreak: 0,
+                };
+            }
+            return  {
+                currentStreak: streakDoc.currentStreak || 0,
+                longestStreak: streakDoc.longestStreak || 0,
+                lastStreakDate: streakDoc.lastStreakDate || ''
+            }
 
-            const updatedHabit = {
-                ...habit,
-                isCompletedToday: true,
-                lastCompleted: new Date().toISOString(),
-                streak: habit.streak + 1,
-                longestStreak: Math.max(habit.longestStreak, habit.streak + 1),
-                completionHistory: [...habit.completionHistory, new Date().toISOString()]
-            };
-
-            await database.updateDocument(DB_ID!, COLLECTION_ID!, habitId, updatedHabit);
-            
-            // Update local state
-            setHabits(habits.map(h => h.$id === habitId ? updatedHabit : h));
         } catch (error) {
-            console.error('Error marking habit complete:', error);
+            console.error('Error fetching user streak:', error);
+            return null;
         }
     };
+
+const markHabitComplete = async (habitId: string) => {
+  try {
+    const habit = habits.find(h => h.$id === habitId);
+    if (!habit || !user) return;
+
+    const now = new Date();
+    const todayStr = now.toISOString().split("T")[0]; // YYYY-MM-DD
+
+    // 1. CREATE LOG IN habit-logs
+    await database.createDocument(
+      DB_ID!,
+      process.env.EXPO_PUBLIC_HABIT_LOG_COLLECTION_ID!,
+      "unique()",
+      {
+        userId: user.$id,
+        habitId,
+        date: new Date(todayStr), // store as datetime
+        isCompleted: true,
+        completedAt: now,
+        category: habit.category,
+      },
+    //   [`user:${user.$id}`],
+        
+    );
+
+    // 2. UPDATE HABIT STATS
+    const updatedHabitData = {
+      isCompletedToday: true,
+      lastCompleted: now.toISOString(),
+      streak: habit.streak + 1,
+      longestStreak: Math.max(habit.longestStreak, habit.streak + 1),
+      completionHistory: [...habit.completionHistory, now.toISOString()],
+    };
+
+    await database.updateDocument(
+      DB_ID!,
+      COLLECTION_ID!,
+      habitId,
+      updatedHabitData
+    );
+
+    // 3. UPDATE LOCAL STATE
+    const updatedHabits = habits.map(h =>
+      h.$id === habitId ? { ...h, ...updatedHabitData } : h
+    );
+    setHabits(updatedHabits);
+
+    // 4. CHECK IF ALL TODAY’S HABITS ARE COMPLETED
+    const dueHabits = updatedHabits.filter(h => {
+      if (h.frequency === "daily") return true;
+      if (h.frequency === "weekly") {
+        const today = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(now);
+        return h.daysOfWeek?.includes(today);
+      }
+      if (h.frequency === "monthly") {
+        const date = now.getDate();
+        return h.daysOfMonth?.includes(date);
+      }
+      return false;
+    });
+
+    const allCompleted = dueHabits.every(h => h.isCompletedToday);
+
+    if (allCompleted) {
+      await updateUserGlobalStreak(todayStr);
+    }
+
+  } catch (error) {
+    console.error('Error in markHabitComplete:', error);
+  }
+};
+
+const updateUserGlobalStreak = async (todayStr: string) => {
+  try {
+    const response = await database.listDocuments(
+      DB_ID!,
+      process.env.EXPO_PUBLIC_USER_STREAK_COLLECTION_ID!,
+      [Query.equal("userId", user?.$id ?? "")]
+    );
+
+    const streakDoc = response.documents[0];
+
+    if (!streakDoc) return null;
+
+    const lastDate = streakDoc.lastStreakDate;
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayStr = yesterday.toISOString().split("T")[0];
+
+    let current = streakDoc.currentStreak;
+    if (lastDate === yesterdayStr) {
+      current += 1;
+    } else {
+      current = 1;
+    }
+
+    const updatedStreak = {
+        currentStreak: current,
+        longestStreak: Math.max(streakDoc.longestStreak, current),
+        lastStreakDate: todayStr,
+        totalHabitsCompleted: (streakDoc.totalHabitsCompleted || 0) + 1
+    };
+
+    await database.updateDocument(
+      DB_ID!,
+      process.env.EXPO_PUBLIC_USER_STREAK_COLLECTION_ID!,
+      streakDoc.$id,
+      updatedStreak
+    );
+
+    return {
+        currentStreak: current,
+        longestStreak: Math.max(streakDoc.longestStreak, current)
+    };
+    
+  } catch (error) {
+    console.error("Error updating user streak:", error);
+    return null;
+  }
+};
+
 
     const addHabit = async (habitData: {
         title: string;
@@ -218,6 +345,7 @@ export function HabitProvider({ children }: HabitProviderProps) {
         deleteHabit,
         onRefresh,
         getTodayStats,
+        fetchStreaks
     };
 
     return (

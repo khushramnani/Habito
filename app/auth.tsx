@@ -12,7 +12,7 @@ export default function Auth() {
 
   const theme = useTheme()
 
-  const { signIn, signUp } = useAuth()
+  const { signIn, signUp  } = useAuth()
 
   const handleAuth = ()=>{
     if (text) {
@@ -100,6 +100,9 @@ export default function Auth() {
 
           <Button mode='contained' onPress={handleAuth} style={{ backgroundColor: theme.colors.scrim }} className='mt-4'>
             {text ? 'Sign In' : 'Sign Up'}
+          </Button>
+          <Button mode='outlined'  className='mt-4'>
+            Sign In with Google
           </Button>
           </View>
           <Text onPress={handlePress} className='text-white text-sm mt-2'>{text ? "Don't have an account? Sign up" : 'Already have an account? Sign in'}</Text>

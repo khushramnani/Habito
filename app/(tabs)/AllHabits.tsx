@@ -20,7 +20,8 @@ export default function AllHabits() {
             refreshing, 
             markHabitComplete, 
             onRefresh, 
-            getTodayStats 
+            getTodayStats,
+        
         } = useHabits();
     const { user } = useAuth();
     const todayStats = getTodayStats();

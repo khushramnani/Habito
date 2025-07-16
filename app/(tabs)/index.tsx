@@ -1,40 +1,45 @@
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { Link } from "expo-router";
-import { RefreshControl, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { useEffect, useState } from 'react';
+import { Dimensions, RefreshControl, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useHabits } from '../../contexts/habitContext';
 import CalendarRow from '../Components/HomeTab/CalendarRow';
+import DailyCards from '../Components/HomeTab/DailyCards';
 import { useAuth } from '../context/authContext';
 
 export default function Index() {
     const { user } = useAuth();
+    const insets = useSafeAreaInsets();
+    const { height: screenHeight } = Dimensions.get('window');
+    const [globalStreak, setGlobalStreak] = useState({ currentStreak: 0, longestStreak: 0 });
     const { 
         habits, 
         loading, 
         refreshing, 
         markHabitComplete, 
         onRefresh, 
-        getTodayStats 
+        getTodayStats,
+        fetchStreaks 
     } = useHabits();
 
-    const categoryIcons = {
-        health: 'heartbeat',
-        productivity: 'rocket',
-        learning: 'book',
-        mindfulness: 'leaf',
-        social: 'users',
-        creative: 'paint-brush',
-        other: 'star'
+    const refreshStreaks = async () => {
+        if (user) {
+            const streaks = await fetchStreaks();
+            if (streaks) {
+                setGlobalStreak(streaks);
+            }
+        }
     };
 
-    const categoryColors = {
-        health: 'bg-red-500',
-        productivity: 'bg-blue-500',
-        learning: 'bg-green-500',
-        mindfulness: 'bg-purple-500',
-        social: 'bg-pink-500',
-        creative: 'bg-yellow-500',
-        other: 'bg-gray-500'
-    };
+    useEffect(() => {
+        refreshStreaks();
+    }, [user]);
+
+    // Refresh streaks when habits change (after completing a habit)
+    useEffect(() => {
+        refreshStreaks();
+    }, [habits]);
 
     const getGreeting = () => {
         const hour = new Date().getHours();
@@ -45,7 +50,14 @@ export default function Index() {
 
     if (!user) {
         return (
-            <View className="bg-gray-50 flex items-center justify-center h-full px-4">
+            <View 
+                className="bg-gray-50 flex items-center justify-center px-4"
+                style={{ 
+                    flex: 1,
+                    paddingTop: insets.top,
+                    paddingBottom: insets.bottom,
+                }}
+            >
                 <FontAwesome5 name="user-circle" size={64} color="#9CA3AF" />
                 <Text className="text-xl font-semibold text-gray-900 mt-4 mb-2">Welcome to HabitTracker</Text>
                 <Text className="text-gray-600 text-center mb-6">Please log in to start tracking your habits</Text>
@@ -59,39 +71,47 @@ export default function Index() {
     }
 
     return (
-        <View className="flex-1 bg-[#EEDEDE]">
-            <ScrollView 
+        <View 
+            className="flex-1 bg-[#EEDEDE] dark:bg-[#283342]"
+            style={{ paddingTop: insets.top + 15 }}
+        >
+            <ScrollView  
                 className="flex-1"
                 refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+                contentContainerStyle={{ 
+                    paddingBottom: Math.max(insets.bottom + 100, 120),
+                    minHeight: screenHeight - insets.top - insets.bottom,
+                }}
+                showsVerticalScrollIndicator={false}
             >
                 {/* Header Section */}
-                <View className=" px-4 py-6 mb-4">
+                <View className="px-4 pt-4 pb-2">
                     <View className="flex-row items-center justify-between mb-4">
-                        <View>
-                            <Text className="text-2xl font-bold text-gray-900">
+                        <View className="flex-1">
+                            <Text className="text-2xl font-bold text-gray-900 dark:text-white">
                                 {getGreeting()}! 👋
                             </Text>
-                            <Text className="text-gray-600">
+                            <Text className="text-gray-600 dark:text-gray-300">
                                 {user.name || 'User'}
                             </Text>
                         </View>
-                        <TouchableOpacity className="bg-orange-500 p-3 rounded-full">
-                            <FontAwesome5 name="bell" size={20} color="white" />
-                        </TouchableOpacity>
+                        <View className="bg-orange-500 px-4 py-2 rounded-full">
+                            <Text className="text-white font-bold text-lg">
+                                {globalStreak.currentStreak }
+                            </Text>
+                        </View>
                     </View>
-
-
                 </View>
 
                 {/* Calendar Section */}
-                <View className=" mb-4">
+                <View className="mb-2">
                     <CalendarRow />
                 </View>
 
-               
-
-                {/* Bottom spacing */}
-                <View className="h-32" />
+                {/* Daily Habits Cards */}
+                <View className="flex-1">
+                    <DailyCards />
+                </View>
             </ScrollView>
         </View>
     );
