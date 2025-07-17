@@ -1,7 +1,8 @@
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+// import { LinearGradient } from 'expo-linear-gradient';
 import { Link } from "expo-router";
 import { useEffect, useState } from 'react';
-import { Dimensions, RefreshControl, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { AppState, Dimensions, RefreshControl, ScrollView, Text, TouchableOpacity, useColorScheme, View } from "react-native";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useHabits } from '../../contexts/habitContext';
 import CalendarRow from '../Components/HomeTab/CalendarRow';
@@ -12,22 +13,34 @@ export default function Index() {
     const { user } = useAuth();
     const insets = useSafeAreaInsets();
     const { height: screenHeight } = Dimensions.get('window');
+    const colorScheme = useColorScheme();
+        const isDark = colorScheme === 'dark';
     const [globalStreak, setGlobalStreak] = useState({ currentStreak: 0, longestStreak: 0 });
-    const { 
-        habits, 
-        loading, 
-        refreshing, 
-        markHabitComplete, 
-        onRefresh, 
+    const {
+        habits,
+        loading,
+        refreshing,
+        markHabitComplete,
+        onRefresh,
+        fetchHabits,
         getTodayStats,
-        fetchStreaks 
+        fetchStreaks
     } = useHabits();
+
+    const streakGradient = "bg-gradient-to-r from-red-500 via-orange-400 to-yellow-300"
 
     const refreshStreaks = async () => {
         if (user) {
-            const streaks = await fetchStreaks();
-            if (streaks) {
-                setGlobalStreak(streaks);
+            try {
+                const streaks = await fetchStreaks();
+                console.log('Fetched streaks:', streaks); // ADDED: Debug log
+                if (streaks) {
+                    setGlobalStreak(streaks);
+                }
+            } catch (error) {
+                console.error('Error refreshing streaks:', error);
+                // CHANGED: Set default values on error
+                setGlobalStreak({ currentStreak: 0, longestStreak: 0 });
             }
         }
     };
@@ -36,10 +49,56 @@ export default function Index() {
         refreshStreaks();
     }, [user]);
 
-    // Refresh streaks when habits change (after completing a habit)
+
     useEffect(() => {
-        refreshStreaks();
+
+        const timer = setTimeout(() => {
+            refreshStreaks();
+        }, 500);
+
+        return () => clearTimeout(timer);
     }, [habits]);
+
+
+    useEffect(() => {
+        if (!user) return;
+        fetchHabits();
+
+
+        let lastDate = new Date().toDateString();
+
+        const handleAppStateChange = () => {
+            if (user) {
+                refreshStreaks();
+            }
+        };
+
+        handleAppStateChange();
+
+        const interval = setInterval(() => {
+  const now = new Date().toDateString();
+  if (now !== lastDate) {
+    lastDate = now;
+    fetchHabits();
+  }
+}, 60 * 1000000);
+
+        const subscription = AppState.addEventListener('change', (nextAppState) => {
+            if (nextAppState === 'active') {
+                const currentDate = new Date().toDateString();
+                if (currentDate !== lastDate) {
+                    console.log('Date changed while app was in background, refetching...');
+                    lastDate = currentDate;
+                    fetchHabits();
+                }
+            }
+        });
+
+        return () => {
+            clearInterval(interval);
+            subscription.remove();
+        };
+    }, [user]);
 
     const getGreeting = () => {
         const hour = new Date().getHours();
@@ -50,9 +109,9 @@ export default function Index() {
 
     if (!user) {
         return (
-            <View 
+            <View
                 className="bg-gray-50 flex items-center justify-center px-4"
-                style={{ 
+                style={{
                     flex: 1,
                     paddingTop: insets.top,
                     paddingBottom: insets.bottom,
@@ -70,15 +129,28 @@ export default function Index() {
         );
     }
 
+    // ADDED: Get today's stats for better debugging
+    const todayStats = getTodayStats();
+    console.log('Today stats:', todayStats); // Debug log
+
     return (
-        <View 
-            className="flex-1 bg-[#EEDEDE] dark:bg-[#283342]"
+        <View
+            className={`flex-1 ${isDark ? 'bg-gray-800' : 'bg-[#EEDEDE]'}`}
             style={{ paddingTop: insets.top + 15 }}
         >
-            <ScrollView  
+            {/* bg-[#283342] */}
+            <ScrollView
                 className="flex-1"
-                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-                contentContainerStyle={{ 
+                refreshControl={
+                    <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={async () => {
+                            await onRefresh();
+                            await refreshStreaks(); // ADDED: Refresh streaks on pull-to-refresh
+                        }}
+                    />
+                }
+                contentContainerStyle={{
                     paddingBottom: Math.max(insets.bottom + 100, 120),
                     minHeight: screenHeight - insets.top - insets.bottom,
                 }}
@@ -91,15 +163,25 @@ export default function Index() {
                             <Text className="text-2xl font-bold text-gray-900 dark:text-white">
                                 {getGreeting()}! 👋
                             </Text>
-                            <Text className="text-gray-600 dark:text-gray-300">
+                            <Text className="text-gray-700 text-lg  dark:text-gray-300">
                                 {user.name || 'User'}
                             </Text>
+                            {/* ADDED: Debug info - remove this in production */}
+                            {/* <Text className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                Today: {todayStats.completed}/{todayStats.total} habits
+                            </Text> */}
                         </View>
-                        <View className="bg-orange-500 px-4 py-2 rounded-full">
-                            <Text className="text-white font-bold text-lg">
-                                {globalStreak.currentStreak }
+                        <TouchableOpacity className="dark:bg-slate-700  rounded-full flex flex-row items-center justify-center gap-1 p-4 ">
+                                <FontAwesome5 name="bolt" size={24} color="#D72638" />
+                            <Text className="text-gray-800 dark:text-gray-300 font-bold text-xl">
+                                
+                                {globalStreak.currentStreak}
                             </Text>
-                        </View>
+                            {/* ADDED: Show longest streak as well */}
+                            {/* <Text className="text-white/80 text-xs text-center">
+                                Best: {globalStreak.longestStreak}
+                            </Text> */}
+                        </TouchableOpacity>
                     </View>
                 </View>
 

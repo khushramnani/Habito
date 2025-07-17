@@ -181,7 +181,7 @@ export default function HabitDetailModal({ visible, habit, onClose, onComplete }
                             </TouchableOpacity>
 
                             {/* Header Section */}
-                            <View className="p-8 pb-6">
+                            <View className="p-8 pb-6 mt-6">
                                 <View className="flex-row items-center justify-between mb-4">
                                     <View className="flex-1 pr-12">
                                         <Text className={`text-3xl font-bold ${habit.isCompletedToday ? 'text-white/90' : 'text-gray-800'

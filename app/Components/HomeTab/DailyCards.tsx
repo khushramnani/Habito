@@ -26,31 +26,46 @@ export default function DailyCards() {
         const today = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(now);
         const currentDate = now.getDate();
 
+        console.log('Filtering habits for today:', { today, currentDate }); // Debug log
+
         const filtered = habits.filter(habit => {
+            let isDue = false;
+            
             if (habit.frequency === 'daily') {
-                return true;
+                isDue = true;
+            } else if (habit.frequency === 'weekly') {
+                isDue = habit.daysOfWeek?.includes(today) || false;
+            } else if (habit.frequency === 'monthly') {
+                isDue = habit.daysOfMonth?.includes(currentDate) || false;
             }
-            if (habit.frequency === 'weekly') {
-                return habit.daysOfWeek?.includes(today);
-            }
-            if (habit.frequency === 'monthly') {
-                return habit.daysOfMonth?.includes(currentDate);
-            }
-            return false;
+
+            console.log(`Habit "${habit.title}" - Frequency: ${habit.frequency}, Due today: ${isDue}, Completed: ${habit.isCompletedToday}`);
+            return isDue;
         });
 
-        // Sort habits to show pending first, then completed
+        // CHANGED: Improved sorting - show pending habits first, then completed
         const sorted = filtered.sort((a, b) => {
-            if (a.isCompletedToday === b.isCompletedToday) return 0;
-            return a.isCompletedToday ? 1 : -1;
+            // First sort by completion status (pending first)
+            if (a.isCompletedToday !== b.isCompletedToday) {
+                return a.isCompletedToday ? 1 : -1;
+            }
+            // Then sort by creation date (newer first)
+            return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
         });
 
+        console.log('Filtered and sorted habits:', sorted.length);
         setTodaysHabits(sorted);
     };
 
     useEffect(() => {
         filterTodaysHabits();
     }, [habits]);
+
+        useEffect(() => {
+        if (todaysHabits.length > 0 && currentIndex >= todaysHabits.length) {
+            setCurrentIndex(0);
+        }
+    }, [todaysHabits]);
 
     // Initialize animated values for each habit
     useEffect(() => {
@@ -80,6 +95,17 @@ export default function DailyCards() {
 
     const handleHabitComplete = async (habitId: string) => {
         // Add haptic feedback for habit completion
+         const habit = todaysHabits.find(h => h.$id === habitId);
+            if (!habit) {
+                console.error('Habit not found');
+                return;
+            }
+
+            if (habit.isCompletedToday) {
+                console.log('Habit already completed today');
+                return;
+            }
+
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
         
         // Animate the card completion
@@ -182,14 +208,14 @@ export default function DailyCards() {
     return (
         <View className="mb-6">
             {/* Header */}
-            <View className="px-4 ">
+            <View className="px-4 py-2">
                 <Text className="text-lg font-semibold text-gray-800 dark:text-white">
                     Today's Habits ({todaysHabits.length})
                 </Text>
             </View>
 
             {/* Cards Container with Navigation */}
-            <View className="relative pt-6">
+            <View className="relative pt-2">
                 {/* Left Arrow */}
                 <TouchableOpacity
                     onPress={() => scrollToIndex(currentIndex - 1)}
