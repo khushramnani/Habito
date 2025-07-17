@@ -243,7 +243,7 @@ export default function TabsLayout() {
                     }} />
 
                                     <Tabs.Screen 
-                    name="Login" 
+                    name="UserScreen" 
                     options={{ 
                         headerTitle: ' ', // Single space instead of empty
                         tabBarIcon: ({ color, focused }) => (

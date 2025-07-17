@@ -39,7 +39,7 @@ export default function DailyCards() {
                 isDue = habit.daysOfMonth?.includes(currentDate) || false;
             }
 
-            console.log(`Habit "${habit.title}" - Frequency: ${habit.frequency}, Due today: ${isDue}, Completed: ${habit.isCompletedToday}`);
+            // console.log(`Habit "${habit.title}" - Frequency: ${habit.frequency}, Due today: ${isDue}, Completed: ${habit.isCompletedToday}`);
             return isDue;
         });
 
@@ -53,7 +53,7 @@ export default function DailyCards() {
             return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
         });
 
-        console.log('Filtered and sorted habits:', sorted.length);
+        // console.log('Filtered and sorted habits:', sorted.length);
         setTodaysHabits(sorted);
     };
 

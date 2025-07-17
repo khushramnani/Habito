@@ -120,11 +120,11 @@ const resetDailyCompletionStatus = (fetchedHabits: Habit[]): Habit[] => {
         const isDueToday = isHabitDueToday(habit);
         const isCompletedToday = isHabitCompletedToday(habit);
         
-        // Debug logging
-        console.log(`Habit: ${habit.title}`);
-        console.log(`Due today: ${isDueToday}`);
-        console.log(`Completed today: ${isCompletedToday}`);
-        console.log(`Completion history:`, habit.completionHistory);
+        
+        // console.log(`Habit: ${habit.title}`);
+        // console.log(`Due today: ${isDueToday}`);
+        // console.log(`Completed today: ${isCompletedToday}`);
+        // console.log(`Completion history:`, habit.completionHistory);
         
         return {
             ...habit,
@@ -447,7 +447,7 @@ const resetDailyCompletionStatus = (fetchedHabits: Habit[]): Habit[] => {
                 current += 1;
             } else if (lastDate === todayStr) {
                 // Already completed today - don't change streak
-                console.log('Global streak already updated today');
+                // console.log('Global streak already updated today');
                 return {
                     currentStreak: current,
                     longestStreak: streakDoc.longestStreak || 0

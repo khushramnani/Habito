@@ -2,6 +2,7 @@ import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { useRouter } from 'expo-router';
 import { useState } from "react";
 import { Alert, KeyboardAvoidingView, Platform, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useHabits } from '../../contexts/habitContext';
 import categoriesData from '../../data/category.json';
 import { useAuth } from '../context/authContext';
@@ -31,6 +32,9 @@ export default function AddHabitScreen() {
         // reminderTime: '',
         
     });
+
+
+    const insects = useSafeAreaInsets()
 
    
 
@@ -146,6 +150,8 @@ export default function AddHabitScreen() {
     return (
         <KeyboardAvoidingView 
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            style={{  paddingTop: insects.top + 15  , paddingBottom: insects.bottom + 50 }}
+            keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
             className="flex-1 bg-[#EEDEDE] "
         >
             <ScrollView 

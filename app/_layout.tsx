@@ -1,6 +1,8 @@
 import { Stack, useRouter, useSegments } from "expo-router";
 import { useEffect } from "react";
 import { HabitProvider } from "../contexts/habitContext";
+import { ThemeProvider } from "../contexts/themeContext";
+import { UserProfileProvider } from "../contexts/userProfileContext";
 import "../global.css";
 import AuthProvider, { useAuth } from "./context/authContext";
 
@@ -36,14 +38,18 @@ function RouteGuard({children}: {children: React.ReactNode}) {
 export default function RootLayout() {
   return (
     <AuthProvider>
-      <HabitProvider>
-        <RouteGuard>
-          <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="auth" options={{ headerShown: false }} />
-          </Stack>
-        </RouteGuard>
-      </HabitProvider>
+      <UserProfileProvider>
+        <ThemeProvider>
+          <HabitProvider>
+            <RouteGuard>
+              <Stack>
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                <Stack.Screen name="auth" options={{ headerShown: false }} />
+              </Stack>
+            </RouteGuard>
+          </HabitProvider>
+        </ThemeProvider>
+      </UserProfileProvider>
     </AuthProvider>
   );
 }

@@ -1,9 +1,10 @@
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useEffect, useState } from 'react';
-import { RefreshControl, ScrollView, Text, View, useColorScheme } from "react-native";
+import { RefreshControl, ScrollView, Text, View } from "react-native";
 import { Query } from 'react-native-appwrite';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useHabits } from '../../contexts/habitContext';
+import { useTheme } from '../../contexts/themeContext';
 import { database } from '../../lib/appwrite';
 import { useAuth } from "../context/authContext";
 
@@ -25,11 +26,10 @@ interface AnalyticsData {
 export default function AnalyticsScreen() {
     const { getTodayStats, habits, fetchStreaks } = useHabits();
     const { user } = useAuth();
+    const { isDark } = useTheme();
     const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
     const [loading, setLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
-    const colorScheme = useColorScheme();
-    const isDark = colorScheme === 'dark';
     const username = user?.name || user?.email?.split('@')[0] || 'User';
     const DB_ID = process.env.EXPO_PUBLIC_APPWRITE_DB_ID;
     const HABIT_LOG_COLLECTION_ID = process.env.EXPO_PUBLIC_HABIT_LOG_COLLECTION_ID;

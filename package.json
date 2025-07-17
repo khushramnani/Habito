@@ -16,7 +16,7 @@
     "@react-navigation/bottom-tabs": "^7.3.10",
     "@react-navigation/elements": "^2.3.8",
     "@react-navigation/native": "^7.1.6",
-    "expo": "~53.0.17",
+    "expo": "^53.0.19",
     "expo-auth-session": "~6.2.1",
     "expo-blur": "~14.1.5",
     "expo-constants": "~17.1.7",
@@ -38,6 +38,7 @@
     "react-dom": "19.0.0",
     "react-native": "0.79.5",
     "react-native-appwrite": "^0.10.0",
+    "react-native-gesture-handler": "~2.24.0",
     "react-native-paper": "^5.14.5",
     "react-native-safe-area-context": "^5.4.0",
     "react-native-screens": "~4.11.1",
@@ -45,7 +46,9 @@
     "react-native-url-polyfill": "^2.0.0",
     "react-native-web": "~0.20.0",
     "react-native-webview": "13.13.5",
-    "rn-swipe-button": "^3.0.1"
+    "rn-swipe-button": "^3.0.1",
+    "typescript": "~5.8.3",
+    "react-native-reanimated": "~3.17.4"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

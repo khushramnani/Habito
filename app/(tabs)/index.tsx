@@ -2,19 +2,20 @@ import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 // import { LinearGradient } from 'expo-linear-gradient';
 import { Link } from "expo-router";
 import { useEffect, useState } from 'react';
-import { AppState, Dimensions, RefreshControl, ScrollView, Text, TouchableOpacity, useColorScheme, View } from "react-native";
+import { AppState, Dimensions, RefreshControl, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useHabits } from '../../contexts/habitContext';
+import { useTheme } from '../../contexts/themeContext';
+import { useUserProfile } from '../../contexts/userProfileContext';
 import CalendarRow from '../Components/HomeTab/CalendarRow';
 import DailyCards from '../Components/HomeTab/DailyCards';
 import { useAuth } from '../context/authContext';
 
 export default function Index() {
     const { user } = useAuth();
+    const { isDark } = useTheme();
     const insets = useSafeAreaInsets();
     const { height: screenHeight } = Dimensions.get('window');
-    const colorScheme = useColorScheme();
-        const isDark = colorScheme === 'dark';
     const [globalStreak, setGlobalStreak] = useState({ currentStreak: 0, longestStreak: 0 });
     const {
         habits,
@@ -27,13 +28,13 @@ export default function Index() {
         fetchStreaks
     } = useHabits();
 
-    const streakGradient = "bg-gradient-to-r from-red-500 via-orange-400 to-yellow-300"
+   const {userProfile} = useUserProfile();
 
     const refreshStreaks = async () => {
         if (user) {
             try {
                 const streaks = await fetchStreaks();
-                console.log('Fetched streaks:', streaks); // ADDED: Debug log
+                // console.log('Fetched streaks:', streaks); 
                 if (streaks) {
                     setGlobalStreak(streaks);
                 }
@@ -87,7 +88,7 @@ export default function Index() {
             if (nextAppState === 'active') {
                 const currentDate = new Date().toDateString();
                 if (currentDate !== lastDate) {
-                    console.log('Date changed while app was in background, refetching...');
+                    // console.log('Date changed while app was in background, refetching...');
                     lastDate = currentDate;
                     fetchHabits();
                 }
@@ -120,7 +121,7 @@ export default function Index() {
                 <FontAwesome5 name="user-circle" size={64} color="#9CA3AF" />
                 <Text className="text-xl font-semibold text-gray-900 mt-4 mb-2">Welcome to HabitTracker</Text>
                 <Text className="text-gray-600 text-center mb-6">Please log in to start tracking your habits</Text>
-                <Link href="/Login" asChild>
+                <Link href="/auth" asChild>
                     <TouchableOpacity className="bg-orange-500 px-6 py-3 rounded-lg">
                         <Text className="text-white font-semibold">Get Started</Text>
                     </TouchableOpacity>
@@ -129,9 +130,9 @@ export default function Index() {
         );
     }
 
-    // ADDED: Get today's stats for better debugging
-    const todayStats = getTodayStats();
-    console.log('Today stats:', todayStats); // Debug log
+    
+    // const todayStats = getTodayStats();
+    // console.log('Today stats:', todayStats); 
 
     return (
         <View
@@ -164,7 +165,7 @@ export default function Index() {
                                 {getGreeting()}! 👋
                             </Text>
                             <Text className="text-gray-700 text-lg  dark:text-gray-300">
-                                {user.name || 'User'}
+                                {userProfile?.name || 'User'}
                             </Text>
                             {/* ADDED: Debug info - remove this in production */}
                             {/* <Text className="text-xs text-gray-500 dark:text-gray-400 mt-1">

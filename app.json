@@ -7,7 +7,6 @@
     "icon": "./assets/images/icon.png",
     "scheme": "appwrite-callback-686d371300181ce0c5d2",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
     "platforms": [
       "ios",
       "android",
