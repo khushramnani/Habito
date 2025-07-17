@@ -5,6 +5,7 @@ import { Query } from 'react-native-appwrite';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useHabits } from '../../contexts/habitContext';
 import { useTheme } from '../../contexts/themeContext';
+import { useUserProfile } from '../../contexts/userProfileContext';
 import { database } from '../../lib/appwrite';
 import { useAuth } from "../context/authContext";
 
@@ -30,7 +31,8 @@ export default function AnalyticsScreen() {
     const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
     const [loading, setLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
-    const username = user?.name || user?.email?.split('@')[0] || 'User';
+    const { userProfile } = useUserProfile();
+    const username = userProfile?.name || 'User';
     const DB_ID = process.env.EXPO_PUBLIC_APPWRITE_DB_ID;
     const HABIT_LOG_COLLECTION_ID = process.env.EXPO_PUBLIC_HABIT_LOG_COLLECTION_ID;
 
@@ -207,7 +209,7 @@ export default function AnalyticsScreen() {
             starter: [
                 `🌟 Every expert was once a beginner! You've completed ${totalCompleted} habits - that's ${totalCompleted} victories to celebrate!`,
                 `🚀 Your journey starts with a single step, and you're already walking! Each habit completed is proof of your potential.`,
-                `💎 Small consistent actions create extraordinary results. You're ${totalCompleted} habits closer to your best self!`
+                `Small consistent actions create extraordinary results. You're ${totalCompleted} habits closer to your best self!`
             ]
         };
 
@@ -284,6 +286,23 @@ export default function AnalyticsScreen() {
 
                 {/* Hero Motivation Card */}
                 {analytics && (
+                    <View className={`rounded-3xl px-2 py-6 border border-white/20`}>
+                        <View className="flex-row items-start">
+                            <View className="bg-white/20 rounded-full p-3 mr-4">
+                                <FontAwesome5 name={getMotivationIcon(analytics.motivationLevel)} size={20} color={isDark ? 'white' : 'black'} />
+                            </View>
+                            <View className="flex-1 items-start">
+                                <Text className="text-gray-700 dark:text-gray-300 text-lg font-semibold mb-2 capitalize">
+                                    {(analytics.motivationLevel)} 
+                                </Text>
+                                <Text className="text-gray-700 p-2 dark:text-gray-300 text-base leading-6 font-light">
+                                    {analytics.personalizedMessage}
+                                </Text>
+                            </View>
+                        </View>
+                    </View>
+                )}
+                {/* {analytics && (
                     <View className={`rounded-3xl  px-2 py-6 border border-gray-800/20 dark:border-white/20`}>
                         <View className="flex-row items-start">
                             <View className="bg-white/20 rounded-full p-3 mr-4">
@@ -293,13 +312,13 @@ export default function AnalyticsScreen() {
                                 <Text className="text-gray-700 dark:text-gray-300 text-lg font-semibold mb-2 capitalize">
                                     {motivationText(analytics.motivationLevel)} 
                                 </Text>
-                                {/* <Text className="text-gray-700 dark:text-gray-300 text-base leading-6 font-light">
+                                <Text className="text-gray-700 dark:text-gray-300 text-base leading-6 font-light">
                                     {analytics.personalizedMessage}
-                                </Text> */}
+                                </Text>
                             </View>
                         </View>
                     </View>
-                )}
+                )} */}
 
                 {/* Today's Focus */}
                 <View className={`rounded-3xl p-6 ${isDark ? 'bg-gray-800/50 border border-gray-700/50' : 'bg-orange-300/80 border border-gray-800/50'} backdrop-blur-sm`}>
@@ -332,23 +351,7 @@ export default function AnalyticsScreen() {
                     </View>
                 </View>
 
-                {/* {analytics && (
-                    <View className={`rounded-3xl px-2 py-6 border border-white/20`}>
-                        <View className="flex-row items-center">
-                            <View className="bg-white/20 rounded-full p-3 mr-4">
-                                <FontAwesome5 name={getMotivationIcon(analytics.motivationLevel)} size={20} color={isDark ? 'white' : 'black'} />
-                            </View>
-                            <View className="flex-1">
-                                <Text className="text-gray-700 dark:text-gray-300 text-lg font-semibold mb-2 capitalize">
-                                    {motivationText(analytics.motivationLevel)} 
-                                </Text>
-                                <Text className="text-gray-700 p-2 dark:text-gray-300 text-base leading-6 font-light">
-                                    {analytics.personalizedMessage}
-                                </Text>
-                            </View>
-                        </View>
-                    </View>
-                )} */}
+                
 
                 {/* Key Metrics */}
                 {analytics && (

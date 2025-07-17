@@ -328,7 +328,7 @@ export default function HabitDetailModal({ visible, habit, onClose, onComplete }
                                                     color="#10B981"
                                                 />
                                                 <Text className="text-xl font-bold ml-3 text-green-600">
-                                                    Completed Today!
+                                                    Completed
                                                 </Text>
                                             </View>
                                         </View>
