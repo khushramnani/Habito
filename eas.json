@@ -1,4 +1,7 @@
 {
+  "cli": {
+    "appVersionSource": "auto"
+  },
   "build": {
     "development": {
       "developmentClient": true,

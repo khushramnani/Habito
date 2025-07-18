@@ -1,14 +1,14 @@
 import { FontAwesome5 } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import {
-  Alert,
-  Modal,
-  ScrollView,
-  Switch,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View
+    Alert,
+    Modal,
+    ScrollView,
+    Switch,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../contexts/themeContext';
@@ -178,6 +178,7 @@ const UserScreen = () => {
     const { userProfile, loading, updateProfile } = useUserProfile();
     const { isDark, themeMode, setThemeMode } = useTheme();
     const [editModalVisible, setEditModalVisible] = useState(false);
+    const [themeChanging, setThemeChanging] = useState(false);
     const insets = useSafeAreaInsets();
 
     const handleSignOut = () => {
@@ -220,6 +221,10 @@ const UserScreen = () => {
     const handleThemeChange = async (mode: 'system' | 'light' | 'dark') => {
         // console.log('handleThemeChange called with:', mode);
         // console.log('Current userProfile.themeMode:', userProfile?.themeMode);
+        
+        // Show loading state briefly for visual feedback
+        setThemeChanging(true);
+        
         try {
             // console.log('Updating profile with themeMode...');
             await updateProfile({ 
@@ -230,8 +235,14 @@ const UserScreen = () => {
             // console.log('Profile updated, now calling setThemeMode...');
             setThemeMode(mode);
             // console.log('setThemeMode called');
+            
+            // Brief delay for smooth transition
+            setTimeout(() => {
+                setThemeChanging(false);
+            }, 300);
         } catch (error) {
             // console.error('Error in handleThemeChange:', error);
+            setThemeChanging(false);
             Alert.alert('Error', 'Failed to update theme setting');
         }
     };
@@ -384,6 +395,18 @@ const UserScreen = () => {
 
     return (
         <View style={{ paddingTop: insets.top + 15, paddingBottom: insets.bottom + 80 }} className={`flex-1 ${isDark ? 'bg-gray-900' : 'bg-[#EEDEDE]'}`}>
+            {/* Theme changing overlay */}
+            {themeChanging && (
+                <View className="absolute inset-0 z-50 bg-black/20 flex items-center justify-center">
+                    <View className={`${isDark ? 'bg-gray-800' : 'bg-white'} px-6 py-4 rounded-2xl shadow-lg flex-row items-center`}>
+                        <View className="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin mr-3" />
+                        <Text className={`${isDark ? 'text-white' : 'text-gray-900'} font-medium`}>
+                            Applying theme...
+                        </Text>
+                    </View>
+                </View>
+            )}
+            
             <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
                 {/* Header */}
                 <View className="px-6 py-6">

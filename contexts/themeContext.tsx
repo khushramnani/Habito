@@ -1,3 +1,4 @@
+import { useColorScheme as useNativeWindColorScheme } from 'nativewind';
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 import { useColorScheme } from 'react-native';
 import { useUserProfile } from './userProfileContext';
@@ -19,6 +20,7 @@ interface ThemeProviderProps {
 
 export function ThemeProvider({ children }: ThemeProviderProps) {
     const systemColorScheme = useColorScheme();
+    const { colorScheme, setColorScheme } = useNativeWindColorScheme();
     const { userProfile, loading } = useUserProfile();
     const [themeMode, setThemeMode] = useState<ThemeMode>('system');
     const [isDark, setIsDark] = useState<boolean>(systemColorScheme === 'dark');
@@ -44,7 +46,9 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
     useEffect(() => {
         if (themeMode === 'system') {
             // console.log('System theme changed, updating to:', systemColorScheme === 'dark');
-            setIsDark(systemColorScheme === 'dark');
+            const newIsDark = systemColorScheme === 'dark';
+            setIsDark(newIsDark);
+            setColorScheme(newIsDark ? 'dark' : 'light');
         }
     }, [systemColorScheme, themeMode]);
 
@@ -66,6 +70,8 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
         
         // console.log('calculateTheme - mode:', mode, 'systemTheme:', systemTheme, 'result:', newIsDark);
         setIsDark(newIsDark);
+        // Update NativeWind's color scheme
+        setColorScheme(newIsDark ? 'dark' : 'light');
     };
 
     const handleSetThemeMode = (mode: ThemeMode) => {

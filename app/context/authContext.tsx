@@ -12,15 +12,18 @@ type AuthContextType = {
     user: Models.User<Models.Preferences> | null;
     signIn: (email: string, password: string) => Promise<string | null>;
     signUp: (email: string, password: string, confirmPassword: string) => Promise<string | null>;
+    completeSignUp: (name: string) => Promise<string | null>;
     signOut: () => Promise<void>;
     signInWithGoogle: () => Promise<string | null>;
     isAuthenticated: boolean;
+    pendingUser: Models.User<Models.Preferences> | null;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export default function AuthProvider({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState<Models.User<Models.Preferences> | null>(null);
+    const [pendingUser, setPendingUser] = useState<Models.User<Models.Preferences> | null>(null);
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
     const [authState, setAuthState] = useState<AuthState>('pending');
 
@@ -66,8 +69,9 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
             await account.create(ID.unique(), email, password);
             await account.createEmailPasswordSession(email, password);
             const userData = await account.get();
-            setUser(userData);
-            setIsAuthenticated(true);
+            
+            // Don't set as authenticated yet - wait for name completion
+            setPendingUser(userData);
             
             await database.createDocument(
                 process.env.EXPO_PUBLIC_APPWRITE_DB_ID!,
@@ -92,6 +96,44 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
         }
     };
 
+    const completeSignUp = async (name: string) => {
+        try {
+            if (!pendingUser) {
+                return "No pending user found";
+            }
+
+            // Update user name in Appwrite Auth (if possible)
+            // Note: Appwrite Auth doesn't directly support updating name, 
+            // so we'll store it in the user profile collection
+            
+            // Create user profile with name
+            await database.createDocument(
+                process.env.EXPO_PUBLIC_APPWRITE_DB_ID!,
+                process.env.EXPO_PUBLIC_USER_PROFILE_COLLECTION_ID!,
+                ID.unique(),
+                {
+                    userId: pendingUser.$id,
+                    name: name,
+                    email: pendingUser.email,
+                    avatar: 'user-circle', // default avatar
+                    themeMode: 'system', // default theme
+                }
+            );
+
+            // Now complete the authentication
+            setUser(pendingUser);
+            setIsAuthenticated(true);
+            setPendingUser(null);
+            return null;
+        } catch (error) {
+            if (error instanceof Error) {
+                console.error('Error completing signup:', error);
+                return error.message;
+            }
+            return 'Error completing signup';
+        }
+    };
+
     const signInWithGoogle = async (): Promise<string | null> => {
         try {
             // Use your existing Appwrite scheme
@@ -100,7 +142,7 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
             console.log('Redirect URI:', redirectScheme);
 
             // Create OAuth2 URL
-            const url = account.createOAuth2Token(OAuthProvider.Google, redirectScheme);
+            const url =  account.createOAuth2Token(OAuthProvider.Google, redirectScheme);
             
             if (!url) {
                 return 'Failed to create OAuth URL';
@@ -172,7 +214,7 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
     };
 
     return (
-        <AuthContext.Provider value={{ user, signIn, signUp, signOut, signInWithGoogle, isAuthenticated }}>
+        <AuthContext.Provider value={{ user, signIn, signUp, completeSignUp, signOut, signInWithGoogle, isAuthenticated, pendingUser }}>
             {children}
         </AuthContext.Provider>
     );

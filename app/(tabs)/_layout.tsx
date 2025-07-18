@@ -11,6 +11,8 @@ interface TabIconProps {
     size?: number;
 }
 
+
+
 const TabIcon = ({ name, color, focused, size = 24 }: TabIconProps) => {
     return (
         <View style={{ alignItems: 'center', justifyContent: 'center' }}>

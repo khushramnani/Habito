@@ -12,11 +12,8 @@ function RouteGuard({children}: {children: React.ReactNode}) {
   const router = useRouter();
   
   const isAuthGroup = segments[0] === "auth";
-
-  
   
   useEffect(() => {
-    
     const timer = setTimeout(() => {
       // Only redirect if we have determined the auth state
       if (!isAuthenticated && !isAuthGroup && user === null) {
@@ -33,7 +30,6 @@ function RouteGuard({children}: {children: React.ReactNode}) {
 
   return <>{children}</>;
 }
-
 
 export default function RootLayout() {
   return (

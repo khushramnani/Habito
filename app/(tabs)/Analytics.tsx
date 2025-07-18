@@ -286,7 +286,7 @@ export default function AnalyticsScreen() {
 
                 {/* Hero Motivation Card */}
                 {analytics && (
-                    <View className={`rounded-3xl px-2 py-6 border border-white/20`}>
+                    <View className={`rounded-3xl px-2 py-6 border border-gray-800/20 dark:border-white/20`}>
                         <View className="flex-row items-start">
                             <View className="bg-white/20 rounded-full p-3 mr-4">
                                 <FontAwesome5 name={getMotivationIcon(analytics.motivationLevel)} size={20} color={isDark ? 'white' : 'black'} />
@@ -443,14 +443,14 @@ export default function AnalyticsScreen() {
 
                 {/* Achievement Banner */}
                 {analytics && analytics.longestStreak > 0 && (
-                    <View className="bg-gradient-to-r from-amber-400 via-orange-500 to-red-500 rounded-3xl p-6">
+                    <View className="bg-gradient-to-r from-amber-400 via-orange-500 to-red-500 rounded-3xl p-6 border border-gray-800/20 dark:border-white/20">
                         <View className="flex-row items-center">
-                            <FontAwesome5 name="trophy" size={20} color="white" />
-                            <Text className="text-white text-lg font-semibold ml-3">
+                            <FontAwesome5 name="trophy" size={20} color={isDark ? 'white' : 'black'} />
+                            <Text className="dark:text-gray-400 text-gray-700 text-lg font-semibold ml-3">
                                 Personal Record
                             </Text>
                         </View>
-                        <Text className="text-white/95 text-base mt-2 font-light">
+                        <Text className="dark:text-white/95 text-gray-500 text-base mt-2 font-light">
                             {analytics.longestStreak} days is your longest streak.
                             {analytics.currentStreak === analytics.longestStreak 
                                 ? " You're at your peak right now!" 
