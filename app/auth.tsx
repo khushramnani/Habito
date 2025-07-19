@@ -17,7 +17,7 @@ export default function Auth() {
 
   const { isDark } = useTheme()
   const insets = useSafeAreaInsets()
-  const { signIn, signUp, completeSignUp } = useAuth()
+  const { signIn, signUp, completeSignUp , signInWithGoogle } = useAuth()
 
   const handleNameSubmit = async () => {
     if (!name.trim()) {
@@ -40,6 +40,22 @@ export default function Auth() {
       setIsLoading(false)
     }
   }
+
+  const handleGoogleSignIn = async () => {
+  setIsLoading(true);
+  setError(null);
+  
+  try {
+    const error = await signInWithGoogle();
+    if (error) {
+      setError(error);
+    }
+  } catch (error) {
+    setError('Google sign-in failed. Please try again.');
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   const handleAuth = () => {
     if (text) {
@@ -257,6 +273,7 @@ export default function Auth() {
 
             {/* Sign In/Up Button */}
             <TouchableOpacity 
+
               onPress={handleAuth} 
               disabled={isLoading}
               className={`p-4 rounded-2xl mb-4 shadow-lg ${
@@ -277,6 +294,7 @@ export default function Auth() {
 
             {/* Google Sign In Button */}
             <TouchableOpacity 
+              onPress={handleGoogleSignIn}
               disabled={isLoading}
               className={`p-4 rounded-2xl border-2 ${
                 isLoading 
