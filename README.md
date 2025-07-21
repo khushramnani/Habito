@@ -95,11 +95,12 @@ Habiyo is a modern, minimalist habit tracking application built with React Nativ
 
 ### Android
 <!-- Add your APK download link here -->
-*APK download link will be available here*
+*APK download link *
+https://expo.dev/artifacts/eas/3sZmmcydr3ikH2JAMFiSRQ.apk
 
 ### iOS
 <!-- Add your App Store link here -->
-*App Store link will be available here*
+*App Store link will be available soon*
 
 ## 🚀 Getting Started
 
@@ -114,7 +115,7 @@ Habiyo is a modern, minimalist habit tracking application built with React Nativ
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/khushramnani/Habito.git
+   git clone https://github.com/khushramnani/Habiyo.git
    cd my-app
    ```
 
