@@ -88,7 +88,12 @@ Habiyo is a modern, minimalist habit tracking application built with React Nativ
 
 ## 📱 Screenshots
 
-<!-- Add your screenshots here when ready -->
+<!-- Add y<img width="678" height="1357" alt="image2" src="https://github.com/user-attachments/assets/65f0c215-32c8-42e1-839b-d26e318fb2e0" />
+<img width="678" height="1357" alt="image1" src="https://github.com/user-attachments/assets/bbf98359-48d7-4868-a9c1-5c53d9fc7216" />
+<img width="678" height="1357" alt="image5" src="https://github.com/user-attachments/assets/79fb1d7f-0ccc-4a99-a716-d8c5e4d249e8" />
+<img width="678" height="1357" alt="image4" src="https://github.com/user-attachments/assets/7162a15c-08bd-4fc1-8702-ff8d381adf9d" />
+<img width="678" height="1357" alt="image3" src="https://github.com/user-attachments/assets/cd281121-b48e-447a-9383-292794cb7b52" />
+our screenshots here when ready -->
 *Screenshots will be added here to showcase the app's beautiful interface*
 
 ## 📥 Download
