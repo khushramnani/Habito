@@ -1,50 +1,263 @@
-# Welcome to your Expo app 👋
+# Habiyo 📱✨
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+*Your daily dose of discipline.*
 
-## Get started
+Habiyo is a modern, minimalist habit tracking application built with React Native and Expo. Transform your daily routines into lasting habits with beautiful design, smart analytics, and seamless user experience.
 
-1. Install dependencies
+![App Logo](./assets/images/icon.png)
 
+## 📋 Table of Contents
+
+- [🌟 Features](#-features)
+- [�️ Tech Stack](#️-tech-stack)
+- [�📱 Screenshots](#-screenshots)
+- [📥 Download](#-download)
+- [🚀 Getting Started](#-getting-started)
+- [🏗️ Project Structure](#️-project-structure)
+- [🎨 Design Philosophy](#-design-philosophy)
+- [🔄 Habit Tracking Logic](#-habit-tracking-logic)
+- [🤝 Contributing](#-contributing)
+- [📄 License](#-license)
+- [🔗 Links](#-links)
+
+## 🌟 Features
+
+### 🎯 Core Functionality
+- **Smart Habit Creation**: Create habits with flexible frequencies (daily, weekly, monthly)
+- **Interactive Calendar**: Beautiful calendar view to track your progress
+- **Daily Cards**: Swipeable cards for easy habit completion
+- **Real-time Streaks**: Track current and longest streaks automatically
+- **Habit Categories**: Organize habits by Health & Fitness, Productivity, Learning, Mindfulness, Creative, Social, and more
+
+### 📊 Analytics & Insights
+- **Personal Analytics Dashboard**: Comprehensive overview of your habit journey
+- **7-Day Rhythm Visualization**: Bar charts showing weekly completion patterns
+- **Completion Rate Tracking**: Monitor your success percentage
+- **Motivational Insights**: Personalized messages based on your progress
+- **Category Statistics**: See which areas you focus on most
+- **Most Productive Day**: Discover your best performance days
+
+### 🎨 User Experience
+- **Dark/Light Theme Support**: Adaptive design that follows system preferences
+- **Haptic Feedback**: Tactile responses for better interaction
+- **Smooth Animations**: Fluid transitions and micro-interactions
+- **Pull-to-Refresh**: Keep your data up-to-date effortlessly
+- **Responsive Design**: Optimized for all screen sizes
+
+### 🔐 Authentication & Sync
+- **Email Authentication**: Secure sign-up and sign-in
+- **Google Sign-In**: Quick authentication with Google
+- **Cloud Sync**: Your data is safely stored and synced across devices
+- **User Profiles**: Personalized experience with custom names and preferences
+
+### ⚡ Performance Features
+- **Background App State Handling**: Automatic data refresh when returning to app
+- **Date Change Detection**: Smart detection of day changes for accurate tracking
+- **Offline-First Design**: Continue using the app even with poor connectivity
+- **Optimized Rendering**: Smooth performance with large habit lists
+
+## 🛠️ Tech Stack
+
+### Frontend
+- **React Native** (0.79.5) - Cross-platform mobile development
+- **Expo** (SDK 53) - Development platform and tools
+- **TypeScript** - Type-safe development
+- **NativeWind** - Tailwind CSS for React Native
+- **Expo Router** - File-based navigation system
+
+### UI/UX
+- **FontAwesome5** - Beautiful icons
+- **React Native Reanimated** - Smooth animations
+- **React Native Gesture Handler** - Touch gestures
+- **Expo Haptics** - Tactile feedback
+- **React Native Paper** - Material Design components
+
+### Backend & Database
+- **Appwrite** - Backend-as-a-Service
+  - User authentication
+  - Database management
+  - Real-time updates
+  - Cloud storage
+
+### Development Tools
+- **ESLint** - Code linting
+- **Prettier** - Code formatting
+- **Tailwind CSS** - Utility-first styling
+- **EAS Build** - Cloud build service
+
+## 📱 Screenshots
+
+<!-- Add your screenshots here when ready -->
+*Screenshots will be added here to showcase the app's beautiful interface*
+
+## 📥 Download
+
+### Android
+<!-- Add your APK download link here -->
+*APK download link will be available here*
+
+### iOS
+<!-- Add your App Store link here -->
+*App Store link will be available here*
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js (16.x or later)
+- npm or yarn
+- Expo CLI
+- Android Studio (for Android development)
+- Xcode (for iOS development, macOS only)
+
+### Installation
+
+1. **Clone the repository**
    ```bash
-   npm install
+   git clone https://github.com/khushramnani/Habito.git
+   cd my-app
    ```
 
-2. Start the app
+2. **Install dependencies**
+   ```bash
+   npm install
+   # or
+   yarn install
+   ```
 
+3. **Set up environment variables**
+   Create a `.env` file in the root directory:
+   ```env
+   EXPO_PUBLIC_APPWRITE_ENDPOINT=your_appwrite_endpoint
+   EXPO_PUBLIC_APPWRITE_PROJECT_ID=your_project_id
+   EXPO_PUBLIC_APPWRITE_DB_ID=your_database_id
+   EXPO_PUBLIC_COLLECTION_ID=your_habits_collection_id
+   EXPO_PUBLIC_HABIT_LOG_COLLECTION_ID=your_logs_collection_id
+   EXPO_PUBLIC_USER_STREAK_COLLECTION_ID=your_streaks_collection_id
+   EXPO_PUBLIC_USER_PROFILE_COLLECTION_ID=your_profiles_collection_id
+   ```
+
+4. **Start the development server**
    ```bash
    npx expo start
    ```
 
-In the output, you'll find options to open the app in a
+5. **Run on your device**
+   - Install Expo Go app on your phone
+   - Scan the QR code from the terminal
+   - Or press `a` for Android emulator, `i` for iOS simulator
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+### Building for Production
 
 ```bash
-npm run reset-project
+# Build for Android
+eas build --platform android
+
+# Build for iOS
+eas build --platform ios
+
+# Build for both platforms
+eas build --platform all
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## 🏗️ Project Structure
 
-## Learn more
+```
+app/
+├── (tabs)/                 # Tab-based navigation
+│   ├── index.tsx          # Home screen with daily cards
+│   ├── AllHabits.tsx      # Habits management
+│   ├── AddHabit.tsx       # Create new habits
+│   ├── Analytics.tsx      # Analytics dashboard
+│   └── UserScreen.tsx     # User profile & settings
+├── Components/
+│   └── HomeTab/
+│       ├── CalendarRow.tsx    # Calendar component
+│       ├── DailyCards.tsx     # Swipeable habit cards
+│       └── HabitDetailModal.tsx # Habit detail popup
+├── context/
+│   └── authContext.tsx    # Authentication logic
+└── auth.tsx               # Authentication screens
 
-To learn more about developing your project with Expo, look at the following resources:
+contexts/
+├── habitContext.tsx       # Habit management state
+├── themeContext.tsx       # Theme management
+└── userProfileContext.tsx # User profile state
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+data/
+└── category.json          # Habit categories data
 
-## Join the community
+lib/
+└── appwrite.ts           # Appwrite configuration
+```
 
-Join our community of developers creating universal apps.
+## 🎨 Design Philosophy
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+Habiyo follows a **minimal-first** design approach:
+
+- **Clean Interface**: Distraction-free environment focused on your habits
+- **Intuitive Navigation**: Everything is where you expect it to be
+- **Consistent Typography**: Clear hierarchy with readable fonts
+- **Thoughtful Colors**: Calming palette that promotes focus
+- **Micro-interactions**: Subtle animations that provide feedback
+
+## 🔄 Habit Tracking Logic
+
+### Frequency Types
+- **Daily**: Habits that should be done every day
+- **Weekly**: Choose specific days of the week
+- **Monthly**: Select specific dates of the month
+
+### Streak Calculation
+- **Current Streak**: Consecutive days of completing all due habits
+- **Longest Streak**: Personal best streak record
+- **Smart Reset**: Streaks are calculated based on actual due dates
+
+### Completion Tracking
+- Habits are marked complete for the current day
+- Historical data is preserved for analytics
+- Progress is synced across all devices
+
+<!-- ## 🤝 Contributing
+
+We welcome contributions! Here's how you can help:
+
+1. **Fork the repository**
+2. **Create a feature branch** (`git checkout -b feature/amazing-feature`)
+3. **Commit your changes** (`git commit -m 'Add amazing feature'`)
+4. **Push to the branch** (`git push origin feature/amazing-feature`)
+5. **Open a Pull Request** -->
+<!-- 
+### Development Guidelines
+- Follow TypeScript best practices
+- Use meaningful commit messages
+- Test on both iOS and Android
+- Ensure accessibility compliance
+- Follow the existing code style -->
+
+## 🐛 Bug Reports & Feature Requests
+
+If you encounter any issues or have feature suggestions:
+
+1. **Check existing issues** on GitHub
+2. **Create a detailed issue** with:
+   - Device and OS version
+   - Steps to reproduce
+   - Expected vs actual behavior
+   - Screenshots if applicable
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+
+## 🔗 Links
+
+- **Repository**: [GitHub](https://github.com/khushramnani/Habito)
+- **Issues**: [Report Issues](https://github.com/khushramnani/Habito/issues)
+- **Documentation**: [Expo Docs](https://docs.expo.dev/)
+
+---
+
+**Made with ❤️ by [Khush Ramnani](https://github.com/khushramnani)**
+
+*Transform your habits, transform your life.* 🌟
