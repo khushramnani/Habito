@@ -4,7 +4,7 @@
 
 Habiyo is a modern, minimalist habit tracking application built with React Native and Expo. Transform your daily routines into lasting habits with beautiful design, smart analytics, and seamless user experience.
 
-![App Logo](./assets/images/icon.png)
+![App Logo](./assets/images/splash-ison.png)
 
 ## 📋 Table of Contents
 
