@@ -4,20 +4,20 @@
 
 Habiyo is a modern, minimalist habit tracking application built with React Native and Expo. Transform your daily routines into lasting habits with beautiful design, smart analytics, and seamless user experience.
 
-
 ![App Logo](./assets/images/splash-icon.png)
 
 ## 📋 Table of Contents
 
 - [🌟 Features](#-features)
-- [�️ Tech Stack](#️-tech-stack)
-- [�📱 Screenshots](#-screenshots)
+- [🛠️ Tech Stack](#️-tech-stack)
+- [📱 Screenshots](#-screenshots)
 - [📥 Download](#-download)
 - [🚀 Getting Started](#-getting-started)
 - [🏗️ Project Structure](#️-project-structure)
 - [🎨 Design Philosophy](#-design-philosophy)
 - [🔄 Habit Tracking Logic](#-habit-tracking-logic)
 - [🤝 Contributing](#-contributing)
+- [🐛 Bug Reports & Feature Requests](#-bug-reports--feature-requests)
 - [📄 License](#-license)
 - [🔗 Links](#-links)
 
@@ -88,24 +88,37 @@ Habiyo is a modern, minimalist habit tracking application built with React Nativ
 
 ## 📱 Screenshots
 
-<!-- Add y<img width="678" height="1357" alt="image2" src="https://github.com/user-attachments/assets/65f0c215-32c8-42e1-839b-d26e318fb2e0" />
-<img width="678" height="1357" alt="image1" src="https://github.com/user-attachments/assets/bbf98359-48d7-4868-a9c1-5c53d9fc7216" />
-<img width="678" height="1357" alt="image5" src="https://github.com/user-attachments/assets/79fb1d7f-0ccc-4a99-a716-d8c5e4d249e8" />
-<img width="678" height="1357" alt="image4" src="https://github.com/user-attachments/assets/7162a15c-08bd-4fc1-8702-ff8d381adf9d" />
-<img width="678" height="1357" alt="image3" src="https://github.com/user-attachments/assets/cd281121-b48e-447a-9383-292794cb7b52" />
-our screenshots here when ready -->
-*Screenshots will be added here to showcase the app's beautiful interface*
+### ☀️ Light Mode
+<div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 20px;">
+  <img src="./assets/light-mode-imgs/image1.png" alt="Light Mode - Home Screen" width="180" />
+  <img src="./assets/light-mode-imgs/image2.png" alt="Light Mode - Analytics" width="180" />
+  <img src="./assets/light-mode-imgs/image3.png" alt="Light Mode - Add Habit" width="180" />
+  <img src="./assets/light-mode-imgs/image4.png" alt="Light Mode - All Habits" width="180" />
+  <img src="./assets/light-mode-imgs/image5.png" alt="Light Mode - Profile" width="180" />
+</div>
+
+### 🌙 Dark Mode
+<div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 20px;">
+  <img src="./assets/dark-mode-img/image1.png" alt="Dark Mode - Home Screen" width="180" />
+  <img src="./assets/dark-mode-img/image2.png" alt="Dark Mode - Analytics" width="180" />
+  <img src="./assets/dark-mode-img/image3.png" alt="Dark Mode - Add Habit" width="180" />
+  <img src="./assets/dark-mode-img/image4.png" alt="Dark Mode - All Habits" width="180" />
+  <img src="./assets/dark-mode-img/image5.png" alt="Dark Mode - Profile" width="180" />
+</div>
+
+
 
 ## 📥 Download
 
 ### Android
-<!-- Add your APK download link here -->
-*APK download link *
-https://expo.dev/artifacts/eas/3sZmmcydr3ikH2JAMFiSRQ.apk
+📱 **[Download APK](https://expo.dev/artifacts/eas/3sZmmcydr3ikH2JAMFiSRQ.apk)**
+
+*Click the link above to download the latest Android APK*
 
 ### iOS
-<!-- Add your App Store link here -->
-*App Store link will be available soon*
+🍎 **App Store link will be available soon**
+
+*iOS version coming to the App Store*
 
 ## 🚀 Getting Started
 
