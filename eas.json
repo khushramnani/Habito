@@ -12,7 +12,12 @@
     },
     "production": {
       "android": {
-        "buildType": "apk"
+        "buildType": "apk",
+        "image": "latest",
+        "node": "22.11.0",
+        "env": {
+          "GRADLE_OPTS": "-Xmx4096m -XX:MaxMetaspaceSize=1024m"
+        }
       },
       "ios": {
         "simulator": true
